@@ -7,4 +7,6 @@ public record StreetAddress(
         String street,
         String postalCode,
         String city
-) {}
+) {
+
+}

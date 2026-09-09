@@ -1,4 +1,4 @@
-package co.ecomerce.domain.event;
+package co.ecomerce.domain.event.service;
 
 import co.ecomerce.domain.event.entity.Business;
 import co.ecomerce.domain.event.entity.Order;
@@ -10,7 +10,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class OrderDomainServiceImpl implements OrderDomainService{
+public class OrderDomainServiceImpl implements OrderDomainService {
     @Override
     public OrderCreatedEvent validateAndInitiateOrder(Order order, Business business) {
         // validateBusiness(business);

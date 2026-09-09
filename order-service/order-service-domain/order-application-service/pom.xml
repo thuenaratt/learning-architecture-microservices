@@ -15,6 +15,10 @@
             <groupId>training</groupId>
             <artifactId>order-domain-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>training</groupId>
+            <artifactId>common-domain</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
