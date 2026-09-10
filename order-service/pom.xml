@@ -10,5 +10,11 @@
     </parent>
 
     <artifactId>order-service</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>training</groupId>
+            <artifactId>order-application-service</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
