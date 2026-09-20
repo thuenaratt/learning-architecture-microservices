@@ -1,6 +1,6 @@
 package co.ecommerce.order.persistence.entity;
 
-import co.ecommerce.domain.valueobject.OrderStatus;
+import co.ecommerce.order.domain.valueobject.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

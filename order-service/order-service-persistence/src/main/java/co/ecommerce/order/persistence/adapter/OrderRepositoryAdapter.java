@@ -1,16 +1,16 @@
 package co.ecommerce.order.persistence.adapter;
 
-import co.ecommerce.domain.entity.Order;
-import co.ecommerce.domain.port.output.OrderRepository;
+import co.ecommerce.order.domain.entity.Order;
+import co.ecommerce.order.domain.port.output.OrderRepository;
 import co.ecommerce.order.persistence.repository.OrderJpaRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
+@RequiredArgsConstructor
 public class OrderRepositoryAdapter implements OrderRepository {
-    private final OrderJpaRepository orderJpaRepository;
 
-    public OrderRepositoryAdapter(OrderJpaRepository orderJpaRepository) {
-        this.orderJpaRepository = orderJpaRepository;
-    }
+    private final OrderJpaRepository orderJpaRepository;
 
     @Override
     public Order saveOrder(Order order) {
