@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface BusinessRepository {
 
-    Optional<Business> findBusinessInformation(Business business);
+    Optional<Business> findBusiness(Business business);
 }

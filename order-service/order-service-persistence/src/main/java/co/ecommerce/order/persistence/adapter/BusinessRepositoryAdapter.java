@@ -20,23 +20,21 @@ public class BusinessRepositoryAdapter implements BusinessRepository {
     private final BusinessPersistenceMapper businessPersistenceMapper;
 
     @Override
-    public Optional<Business> findBusinessInformation(Business business) {
-        List<UUID> productIds = business.getProducts().stream()
-                .map(product -> product.getId().value())
-                .toList();
+    public Optional<Business> findBusiness(Business business) {
+        // Map business to list of business products
+        List<UUID> businessProducts = businessPersistenceMapper.businessToBusinessProducts(business);
 
-        List<BusinessEntity> businessEntities = businessJpaRepository
-                .findByBusinessIdAndProductIdIn(
-                        business.getId().value(),
-                        productIds
-                );
+        // Find business entities from database
+        List<BusinessEntity> businessEntities = businessJpaRepository.findByBusinessIdAndProductIdIn(
+                business.getId().value(),
+                businessProducts
+        );
 
         if (businessEntities.isEmpty()) {
             return Optional.empty();
         }
 
-        return Optional.of(
-                businessPersistenceMapper.businessEntitiesToBusiness(businessEntities)
-        );
+        // Map list of business entities to business which contains all products
+        return Optional.of(businessPersistenceMapper.businessEntityToBusiness(businessEntities));
     }
 }

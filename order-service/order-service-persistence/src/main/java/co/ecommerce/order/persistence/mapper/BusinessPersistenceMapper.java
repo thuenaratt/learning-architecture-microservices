@@ -6,30 +6,35 @@ import co.ecommerce.order.domain.valueobject.BusinessId;
 import co.ecommerce.order.domain.valueobject.Money;
 import co.ecommerce.order.domain.valueobject.ProductId;
 import co.ecommerce.order.persistence.entity.BusinessEntity;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.UUID;
 
-@Component
-public class BusinessPersistenceMapper {
+@Mapper(componentModel = "spring")
+public interface BusinessPersistenceMapper {
 
-    public Business businessEntitiesToBusiness(List<BusinessEntity> businessEntities) {
-        BusinessEntity firstEntity = businessEntities.getFirst();
-
-        return Business.builder()
-                .id(new BusinessId(firstEntity.getBusinessId()))
-                .active(firstEntity.isBusinessActive())
-                .products(businessEntities.stream()
-                        .map(this::businessEntityToProduct)
-                        .toList())
-                .build();
+    default List<UUID> businessToBusinessProducts(Business business) {
+        return business.getProducts().stream()
+                .map(product -> product.getId().value())
+                .toList();
     }
 
-    private Product businessEntityToProduct(BusinessEntity businessEntity) {
-        return Product.builder()
-                .id(new ProductId(businessEntity.getProductId()))
-                .name(businessEntity.getProductName())
-                .price(new Money(businessEntity.getProductPrice()))
+    default Business businessEntityToBusiness(List<BusinessEntity> businessEntities) {
+        BusinessEntity businessEntity = businessEntities.getFirst();
+
+        List<Product> businessProducts = businessEntities.stream()
+                .map(entity -> Product.builder()
+                        .id(new ProductId(entity.getProductId()))
+                        .name(entity.getProductName())
+                        .price(new Money(entity.getProductPrice()))
+                        .build())
+                .toList();
+
+        return Business.builder()
+                .id(new BusinessId(businessEntity.getBusinessId()))
+                .products(businessProducts)
+                .active(businessEntity.isBusinessActive())
                 .build();
     }
 }
