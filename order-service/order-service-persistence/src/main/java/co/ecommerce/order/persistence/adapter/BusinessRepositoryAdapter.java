@@ -2,6 +2,7 @@ package co.ecommerce.order.persistence.adapter;
 
 import co.ecommerce.order.domain.entity.Business;
 import co.ecommerce.order.domain.port.output.BusinessRepository;
+import co.ecommerce.order.persistence.entity.BusinessEntity;
 import co.ecommerce.order.persistence.mapper.BusinessPersistenceMapper;
 import co.ecommerce.order.persistence.repository.BusinessJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,18 @@ public class BusinessRepositoryAdapter implements BusinessRepository {
                 .map(product -> product.getId().value())
                 .toList();
 
-        return Optional.of(businessJpaRepository
-                        .findByBusinessIdAndProductIdIn(
-                                business.getId().value(),
-                                productIds))
-                .filter(businessEntities -> !businessEntities.isEmpty())
-                .map(businessPersistenceMapper::businessEntitiesToBusiness);
+        List<BusinessEntity> businessEntities = businessJpaRepository
+                .findByBusinessIdAndProductIdIn(
+                        business.getId().value(),
+                        productIds
+                );
+
+        if (businessEntities.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(
+                businessPersistenceMapper.businessEntitiesToBusiness(businessEntities)
+        );
     }
 }
