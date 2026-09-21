@@ -30,10 +30,6 @@ public class BusinessRepositoryAdapter implements BusinessRepository {
                 businessProducts
         );
 
-        if (businessEntities.isEmpty()) {
-            return Optional.empty();
-        }
-
         // Map list of business entities to business which contains all products
         return Optional.of(businessPersistenceMapper.businessEntityToBusiness(businessEntities));
     }
