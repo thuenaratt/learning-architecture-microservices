@@ -5,6 +5,7 @@ import co.ecommerce.order.domain.entity.Order;
 import co.ecommerce.order.domain.event.OrderCancelledEvent;
 import co.ecommerce.order.domain.event.OrderCreatedEvent;
 import co.ecommerce.order.domain.event.OrderPaidEvent;
+import co.ecommerce.order.domain.exception.OrderDomainException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -14,6 +15,9 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     @Override
     public OrderCreatedEvent validateAndInitiateOrder(Order order, Business business) {
         // validateBusiness(business);
+        if(!business.isActive()){
+            throw new OrderDomainException("Business is not currently active");
+        }
         //setOrderProductInformation(order, business);
         order.validateOrder();
         order.initializeOrder();
@@ -22,21 +26,25 @@ public class OrderDomainServiceImpl implements OrderDomainService {
 
     @Override
     public OrderPaidEvent payOrder(Order order) {
-        return null;
+        order.pay();
+        return new OrderPaidEvent(order, ZonedDateTime.now(ZoneId.of("UTC")));
     }
 
     @Override
     public void approveOrder(Order order) {
+        order.approve();
 
     }
 
     @Override
     public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages) {
-        return null;
+        order.initCancel(failureMessages);
+        return new OrderCancelledEvent(order, ZonedDateTime.now(ZoneId.of("UTC")));
     }
 
     @Override
     public void cancelOrder(Order order, List<String> failureMessages) {
+        order.cancel(failureMessages);
 
     }
 }

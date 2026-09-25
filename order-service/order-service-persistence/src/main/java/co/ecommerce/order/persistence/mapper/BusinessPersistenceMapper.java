@@ -6,7 +6,8 @@ import co.ecommerce.order.domain.valueobject.BusinessId;
 import co.ecommerce.order.domain.valueobject.Money;
 import co.ecommerce.order.domain.valueobject.ProductId;
 import co.ecommerce.order.persistence.entity.BusinessEntity;
-import co.ecommerce.order.persistence.exception.BusinessPersistenceException;
+
+import co.ecommerce.persistence.business.exception.BusinessPersistenceException;
 import org.mapstruct.Mapper;
 
 import java.util.List;

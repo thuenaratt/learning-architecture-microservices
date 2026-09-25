@@ -32,9 +32,6 @@ public class OrderCommandController {
             ){
 //        Mapping logic
         CreateOrderCommand createOrderCommand = orderWebMapper.orderCreateRequestToCreateOrderCommand(orderCreateRequest);
-            createOrderUseCase.execute(createOrderCommand);
-
-
         CreateOrderResult createOrderResult = createOrderUseCase.execute(createOrderCommand);
 //
         return orderWebMapper.createOrderResultToOrderCreateResponse(

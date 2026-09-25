@@ -33,6 +33,6 @@ public class OrderEntity {
 
     private UUID trackingId;
     private OrderStatus orderStatus;
-    private String failureMessage; //message1;message2
+    private String failureMessages; //message1;message2
 
 }

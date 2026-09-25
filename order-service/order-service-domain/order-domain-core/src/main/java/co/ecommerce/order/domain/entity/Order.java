@@ -156,6 +156,11 @@ public class Order extends BaseEntity<OrderId> {
         failureMessages = builder.failureMessages;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+
     public static final class Builder {
         public CustomerId customerId;
         private OrderId id;
@@ -168,10 +173,6 @@ public class Order extends BaseEntity<OrderId> {
         private List<String> failureMessages;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(OrderId val) {

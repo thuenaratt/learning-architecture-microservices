@@ -43,6 +43,14 @@
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>training</groupId>
+            <artifactId>common-restapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>training</groupId>
+            <artifactId>common-persistence</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

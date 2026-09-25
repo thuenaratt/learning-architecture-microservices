@@ -19,3 +19,7 @@ public interface OrderDomainService {
 
 
 }
+
+
+//order domain service are optional
+//object that return are from domain event

@@ -1,7 +1,8 @@
-package co.ecommerce.order.persistence.exception;
+package co.ecommerce.persistence.business.exception;
 
 public class BusinessPersistenceException extends RuntimeException {
     public BusinessPersistenceException(String message) {
         super(message);
     }
+
 }

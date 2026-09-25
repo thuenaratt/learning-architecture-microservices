@@ -3,7 +3,9 @@ package co.ecommerce.order.domain.entity;
 import co.ecommerce.order.domain.valueobject.Money;
 import co.ecommerce.order.domain.valueobject.OrderId;
 import co.ecommerce.order.domain.valueobject.OrderItemId;
+import lombok.Getter;
 
+@Getter
 public class OrderItem extends BaseEntity<OrderItemId>{
     private final Product product;
     private final Integer quantity;
@@ -12,26 +14,6 @@ public class OrderItem extends BaseEntity<OrderItemId>{
     // can change after order has been created
     private OrderId orderId;
 
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public Money getPrice() {
-        return price;
-    }
-
-    public Money getSubTotal() {
-        return subTotal;
-    }
-
-    public OrderId getOrderId() {
-        return orderId;
-    }
 
     private OrderItem(Builder builder) {
         super.setId(builder.id);
@@ -53,7 +35,29 @@ public class OrderItem extends BaseEntity<OrderItemId>{
                 price.multiply(quantity).equals(subTotal);
     }
 
+    public Product getProduct() {
+        return product;
+    }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Money getPrice() {
+        return price;
+    }
+
+    public Money getSubTotal() {
+        return subTotal;
+    }
+
+    public OrderId getOrderId() {
+        return orderId;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private OrderItemId id;
@@ -66,9 +70,7 @@ public class OrderItem extends BaseEntity<OrderItemId>{
         private Builder() {
         }
 
-        public static Builder builder() {
-            return new Builder();
-        }
+
 
         public Builder id(OrderItemId val) {
             id = val;
