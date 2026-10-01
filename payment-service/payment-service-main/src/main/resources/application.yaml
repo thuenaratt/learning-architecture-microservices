@@ -1,6 +1,6 @@
 # Change payment service running port
 server:
-  port: 8551
+  port: 8553
 
 spring:
   application:
