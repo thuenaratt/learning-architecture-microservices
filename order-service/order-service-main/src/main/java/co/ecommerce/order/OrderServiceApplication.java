@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 public class OrderServiceApplication {
     private OrderServiceApplication() {
+        
     }
 
     static void main(String[] args) {

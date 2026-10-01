@@ -25,14 +25,17 @@ public class OrderEntity {
 
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItemEntity> items;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private OrderAddressEntity orderAddress;
 
     private UUID trackingId;
+
+    @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
     private String failureMessages; //message1;message2
+
 
 }

@@ -1,6 +1,7 @@
 package co.ecommerce.order.persistence.adapter;
 
 import co.ecommerce.order.domain.entity.Order;
+import co.ecommerce.order.domain.entity.OrderItem;
 import co.ecommerce.order.domain.port.output.OrderRepository;
 import co.ecommerce.order.persistence.entity.OrderEntity;
 import co.ecommerce.order.persistence.mapper.OrderPersistenceMapper;
@@ -19,10 +20,12 @@ public class OrderRepositoryAdapter implements OrderRepository {
     public Order saveOrder(Order order) {
         // Map Order to OrderEntity
         OrderEntity orderEntity = orderPersistenceMapper.orderToOrderEntity(order);
+        orderEntity.getOrderAddress().setOrder(orderEntity);
+        orderEntity.getItems().forEach(orderItemEntity -> orderItemEntity.setOrder(orderEntity));
 //        save into database
-//        orderEntity = orderJpaRepository.save(orderEntity);
+        OrderEntity saveOrderEntity = orderJpaRepository.save(orderEntity);
         // Map OrderEntity to Order
-        return orderPersistenceMapper.orderEntityToOrder(orderJpaRepository.save(orderEntity));
+        return orderPersistenceMapper.orderEntityToOrder(saveOrderEntity);
     }
 
 

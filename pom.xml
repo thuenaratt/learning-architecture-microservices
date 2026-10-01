@@ -29,6 +29,12 @@
         <module>order-service/order-service-restapi</module>
         <module>order-service/order-service-messaging</module>
         <module>order-service/order-service-main</module>
+        <module>business-service</module>
+        <module>customer-service</module>
+        <module>payment-service</module>
+        <module>customer-service/customer-service-domain</module>
+        <module>customer-service/customer-service-domain/customer-domain-core</module>
+        <module>customer-service/customer-service-domain/customer-application-service</module>
     </modules>
     <scm>
         <connection/>
@@ -89,7 +95,54 @@
                 <artifactId>common-restapi</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
-        </dependencies>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>business-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>business-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>business-service-persistence</artifactId>
+                <version>${project.version}</version>
+            </dependency>            <dependency>
+                <groupId>training</groupId>
+                <artifactId>customer-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>customer-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>customer-service-restapi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>customer-service-persistence</artifactId>
+                <version>${project.version}</version>
+            </dependency>            <dependency>
+                <groupId>training</groupId>
+                <artifactId>payment-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>payment-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>payment-service-persistence</artifactId>
+                <version>${project.version}</version>
+            </dependency>        </dependencies>
     </dependencyManagement>
     <dependencies>
         <dependency>
@@ -141,3 +194,4 @@
     </build>
 
 </project>
+

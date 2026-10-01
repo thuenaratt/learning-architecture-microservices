@@ -3,10 +3,12 @@ package co.ecommerce.order.domain.entity;
 import co.ecommerce.order.domain.exception.OrderDomainException;
 import co.ecommerce.order.domain.valueobject.*;
 import co.ecommerce.order.domain.valueobject.*;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 public class Order extends BaseEntity<OrderId> {
     private final CustomerId customerId;
     private final BusinessId businessId;
@@ -111,38 +113,6 @@ public class Order extends BaseEntity<OrderId> {
         updateFailureMessages(failureMessages);
     }
 
-
-    public CustomerId getCustomerId() {
-        return customerId;
-    }
-
-    public BusinessId getBusinessId() {
-        return businessId;
-    }
-
-    public StreetAddress getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public Money getPrice() {
-        return price;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    public TrackingId getTrackingId() {
-        return trackingId;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public List<String> getFailureMessages() {
-        return failureMessages;
-    }
 
     private Order(Builder builder) {
         super.setId(builder.id);

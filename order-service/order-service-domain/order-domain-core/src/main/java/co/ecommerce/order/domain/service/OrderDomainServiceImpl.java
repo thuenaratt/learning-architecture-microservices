@@ -6,6 +6,7 @@ import co.ecommerce.order.domain.event.OrderCancelledEvent;
 import co.ecommerce.order.domain.event.OrderCreatedEvent;
 import co.ecommerce.order.domain.event.OrderPaidEvent;
 import co.ecommerce.order.domain.exception.OrderDomainException;
+import co.ecommerce.order.domain.entity.Product;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -18,10 +19,26 @@ public class OrderDomainServiceImpl implements OrderDomainService {
         if(!business.isActive()){
             throw new OrderDomainException("Business is not currently active");
         }
-        //setOrderProductInformation(order, business);
+        setOrderProductInformation(order, business);
         order.validateOrder();
         order.initializeOrder();
         return new OrderCreatedEvent(order, ZonedDateTime.now(ZoneId.of("UTC")));
+    }
+
+    private void setOrderProductInformation(Order order, Business business) {
+        order.getItems().forEach(orderItem -> {
+            Product businessProduct = business.getProducts().stream()
+                    .filter(product -> product.getId().equals(orderItem.getProduct().getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new OrderDomainException(
+                            "Product " + orderItem.getProduct().getId().value()
+                                    + " is not available for this business"));
+
+            orderItem.getProduct().updateWithConfirmedNameAndPrice(
+                    businessProduct.getName(),
+                    businessProduct.getPrice()
+            );
+        });
     }
 
     @Override

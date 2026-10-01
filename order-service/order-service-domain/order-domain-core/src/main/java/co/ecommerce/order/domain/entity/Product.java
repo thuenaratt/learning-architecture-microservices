@@ -4,8 +4,13 @@ import co.ecommerce.order.domain.valueobject.Money;
 import co.ecommerce.order.domain.valueobject.ProductId;
 
 public class Product extends BaseEntity<ProductId>{
-    private final String name;
-    private final Money price;
+    private String name;
+    private Money price;
+
+    public void updateWithConfirmedNameAndPrice(String name, Money price) {
+        this.name = name;
+        this.price = price;
+    }
 
     public String getName() {
         return name;

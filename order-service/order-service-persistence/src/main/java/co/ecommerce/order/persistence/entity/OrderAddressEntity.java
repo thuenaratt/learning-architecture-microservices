@@ -15,7 +15,7 @@ import java.util.UUID;
 public class OrderAddressEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+//    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID Id;
     private String street;
     private String postalCode;

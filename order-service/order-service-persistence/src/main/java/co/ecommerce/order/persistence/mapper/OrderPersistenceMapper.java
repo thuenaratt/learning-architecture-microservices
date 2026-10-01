@@ -2,6 +2,8 @@ package co.ecommerce.order.persistence.mapper;
 
 import co.ecommerce.order.domain.entity.Order;
 import co.ecommerce.order.domain.entity.OrderItem;
+import co.ecommerce.order.domain.valueobject.StreetAddress;
+import co.ecommerce.order.persistence.entity.OrderAddressEntity;
 import co.ecommerce.order.persistence.entity.OrderEntity;
 import co.ecommerce.order.persistence.entity.OrderItemEntity;
 import org.mapstruct.Mapper;
@@ -13,14 +15,17 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OrderPersistenceMapper {
 
-    @Mapping(source = "id.value", target = "id")
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "customerId.value", target = "customerId")
     @Mapping(source = "businessId.value", target = "businessId")
     @Mapping(source = "price.amount", target = "price")
     @Mapping(source = "trackingId.value", target = "trackingId")
+    @Mapping(source = "deliveryAddress", target = "orderAddress")
     @Mapping(source = "failureMessages", target = "failureMessages", qualifiedByName = "mapFailureMessages")
     OrderEntity orderToOrderEntity(Order order);
 
+    @Mapping(target = "id", expression = "java(UUID.randomUUID())")
+    OrderAddressEntity deliveryAddressToOrderAddressEntity(StreetAddress deliveryAddress);
 
     @Mapping(target = "id.value", source = "id")
     @Mapping(target = "customerId.value", source = "customerId")
@@ -31,7 +36,7 @@ public interface OrderPersistenceMapper {
     Order orderEntityToOrder(OrderEntity orderEntity);
 
     // Issue Map List<OrderItem> to List<OrderItemEntity>
-    @Mapping(source = "id.value", target = "id")
+    @Mapping(target = "id", ignore = true)
     @Mapping(source = "product.id.value", target = "productId")
     @Mapping(source = "price.amount", target = "price")
     @Mapping(source = "subTotal.amount", target = "subTotal")
@@ -46,13 +51,15 @@ public interface OrderPersistenceMapper {
 
     @Named("mapFailureMessages")
     default String mapFailureMessages(List<String> failureMessages) {
-        return String.join(",", failureMessages);
+        return failureMessages == null ? null : String.join(",", failureMessages);
     }
 
 
     @Named("mapFailureMessagesToList")
     default List<String> mapFailureMessagesToList(String failureMessages) {
-        return Arrays.stream(failureMessages.split(",")).toList();
+        return failureMessages == null || failureMessages.isBlank()
+                ? List.of()
+                : Arrays.stream(failureMessages.split(",")).toList();
     }
 
 

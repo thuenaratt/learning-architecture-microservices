@@ -20,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 
-import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
@@ -52,13 +50,13 @@ public class CreateOrderUseCase {
                 .products(products)
                 .build();
 
-        businessRepository.findBusiness(business)
+        Business persistedBusiness = businessRepository.findBusiness(business)
                 .orElseThrow(() -> new OrderDomainException("Could not fine business with ID: " + createOrderCommand.businessId()));
 
-        log.info("Found business: {}", business);
+        log.info("Found business: {}", persistedBusiness);
 //        invoke order domain login
         Order order = orderDomainMapper.createOrderCommandToOrder(createOrderCommand);
-        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, business);
+        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, persistedBusiness);
         log.info("Order created: {}", orderCreatedEvent.getOrder().getId());
 //          save order to database
         Order saveOrder = orderRepository.saveOrder(order);
@@ -72,3 +70,4 @@ public class CreateOrderUseCase {
 //insert , update , delete  call Command and Transition
 //select -> Query -> Transition read Only
 //pattern: CQRS = command query Repository segregate
+//bug error from we not save order_Item and order_address in Order

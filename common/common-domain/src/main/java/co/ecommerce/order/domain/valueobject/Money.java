@@ -2,6 +2,7 @@ package co.ecommerce.order.domain.valueobject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 public record Money(BigDecimal amount){
     public final static Money ZERO = new Money(BigDecimal.ZERO);
@@ -43,5 +44,24 @@ public record Money(BigDecimal amount){
     private BigDecimal setScale(BigDecimal inputAmount) {
         return inputAmount.setScale(2, RoundingMode.HALF_EVEN);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof Money money)) {
+            return false;
+        }
+        return amount != null && money.amount != null
+                ? amount.compareTo(money.amount) == 0
+                : amount == money.amount;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(amount == null ? null : amount.stripTrailingZeros());
+    }
+
 
 }
