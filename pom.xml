@@ -35,6 +35,7 @@
         <module>customer-service/customer-service-domain</module>
         <module>customer-service/customer-service-domain/customer-domain-core</module>
         <module>customer-service/customer-service-domain/customer-application-service</module>
+        <module>gateway-service</module>
     </modules>
     <scm>
         <connection/>
