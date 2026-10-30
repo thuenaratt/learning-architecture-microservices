@@ -1,7 +1,6 @@
 package co.ecommerce.user.service;
 
 import org.keycloak.representations.idm.UserRepresentation;
-import java.util.List;
 
 public interface KeycloakUserService {
     void createKeycloakUser(UserRepresentation userRepresentation);
@@ -10,10 +9,6 @@ public interface KeycloakUserService {
 
     void updateKeycloakUser(String id, UserRepresentation userRepresentation);
     UserRepresentation getKeycloakUserById(String id);
-
-    List<UserRepresentation> getKeycloakUsersByRoleName(String roleName);
-
-    void deleteKeycloakUser(String id);
 
 
 

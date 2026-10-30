@@ -118,41 +118,4 @@ public class UserServiceImpl implements UserService {
                 userRepresentation
         );
     }
-
-    @Override
-    public UserResponse getUserById(String id) {
-        return getById(id);
-    }
-
-    @Override
-    public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream()
-                .map(user -> userMapper.toResponse(user,
-                        keycloakUserService.getKeycloakUserById(user.getId())))
-                .toList();
-    }
-
-    @Override
-    public List<UserResponse> getUsersByRoleName(String roleName) {
-        return keycloakUserService.getKeycloakUsersByRoleName(roleName).stream()
-                .flatMap(user -> userRepository.findById(user.getId()).stream()
-                        .map(entity -> userMapper.toResponse(entity, user)))
-                .toList();
-    }
-
-    @Override
-    public UserResponse getUserByUsername(String username) {
-        UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found"));
-        UserRepresentation userRepresentation = keycloakUserService.getKeycloakUserByUsername(username);
-        return userMapper.toResponse(userEntity, userRepresentation);
-    }
-
-    @Override
-    public void delete(String id) {
-        UserEntity userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found"));
-        keycloakUserService.deleteKeycloakUser(id);
-        userRepository.delete(userEntity);
-    }
 }

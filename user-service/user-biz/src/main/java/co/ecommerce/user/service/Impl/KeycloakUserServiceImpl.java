@@ -10,8 +10,6 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -65,25 +63,5 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
                 .users()
                 .get(id)
                 .toRepresentation();
-    }
-
-    @Override
-    public List<UserRepresentation> getKeycloakUsersByRoleName(String roleName) {
-        var roleResource = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
-                .roles().get(roleName);
-        List<UserRepresentation> users = new ArrayList<>();
-        int pageSize = 100;
-        for (int first = 0; ; first += pageSize) {
-            List<UserRepresentation> page = roleResource.getUserMembers(first, pageSize);
-            users.addAll(page);
-            if (page.size() < pageSize) {
-                return users;
-            }
-        }
-    }
-
-    @Override
-    public void deleteKeycloakUser(String id) {
-        keycloak.realm(KeycloakAdminClientConfig.REALM_NAME).users().get(id).remove();
     }
 }
