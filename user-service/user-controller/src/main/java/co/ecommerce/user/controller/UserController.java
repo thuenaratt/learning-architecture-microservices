@@ -49,9 +49,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String id) {
+    @ResponseStatus(HttpStatus.OK)
+    public java.util.Map<String, String> delete(@PathVariable String id) {
         userService.delete(id);
+        return java.util.Map.of("message", "User deleted successfully");
     }
 
 }

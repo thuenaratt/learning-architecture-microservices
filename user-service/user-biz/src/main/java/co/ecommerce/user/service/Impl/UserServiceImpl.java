@@ -138,7 +138,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserByUsername(String username) {
         UserEntity userEntity = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new UserNotFoundException(
+                        HttpStatus.NOT_FOUND,
+                        "User not found"));
         UserRepresentation userRepresentation = keycloakUserService
                 .getKeycloakUserByUsername(userEntity.getUsername());
         return userMapper.toResponse(userEntity, userRepresentation);
@@ -147,7 +149,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(String id) {
         UserEntity userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new UserNotFoundException(
+                        HttpStatus.NOT_FOUND,
+                        "User not found"));
         keycloakUserService.deleteKeycloakUser(id);
         userRepository.delete(userEntity);
     }
