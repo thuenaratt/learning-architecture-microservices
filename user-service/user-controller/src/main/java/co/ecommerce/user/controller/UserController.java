@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -30,6 +31,27 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponse getById(@PathVariable String id){
         return userService.getById(id);
+    }
+
+    @GetMapping
+    public List<UserResponse> getUsers() {
+        return userService.getUsers();
+    }
+
+    @GetMapping("/roles/{roleName}")
+    public List<UserResponse> getUsersByRoleName(@PathVariable String roleName) {
+        return userService.getUsersByRoleName(roleName);
+    }
+
+    @GetMapping("/username/{username}")
+    public UserResponse getUserByUsername(@PathVariable String username) {
+        return userService.getUserByUsername(username);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        userService.delete(id);
     }
 
 }
