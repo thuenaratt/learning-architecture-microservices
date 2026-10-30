@@ -22,6 +22,7 @@ public class GatewaySecurityConfig {
         http.authorizeExchange(exchange -> exchange
                 .pathMatchers("/auth/**").authenticated()
                 .pathMatchers("/products/**").authenticated()
+                .pathMatchers("profile").authenticated()
                 .anyExchange().permitAll());
 
         http.csrf(ServerHttpSecurity.CsrfSpec::disable);
@@ -47,3 +48,11 @@ public class GatewaySecurityConfig {
 
 
 }
+
+
+//MVC
+//Spring Web MVC
+//Controller->user-controller
+//Service -> user-biz
+//Repository
+//entity

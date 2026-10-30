@@ -13,11 +13,17 @@ spring:
     gateway:
       server:
         webflux:
-          routes:
-            - id: vuejs
-              uri: http://[::1]:5173 #              http://localhost:5173
-              predicates:
-                - Path=/**
+#          routes:
+#            - id: swagger-ui
+#              uri: http://localhost:8585
+#              predicates:
+#                - Path=/swagger-ui/**
+#              filters:
+#                - RewritePath=/swagger-ui/?(?<segment>.*), /swagger-ui/$\{segment}
+#            - id: vuejs
+#              uri: http://[::1]:5173 #              http://localhost:5173
+#              predicates:
+#                - Path=/**
 
 #            - id: order-service
 #              uri: lb://order-service
@@ -25,6 +31,19 @@ spring:
 #                - Path=/order-service/**
 #              filters:
 #                - RewritePath=/order-service/?(?<segment>.*), /$\{segment}
+
+          #            - id: vuejs
+          #              uri: http://[::1]:5173 #http://localhost:5173
+          #              #uri: http://localhost:3000
+          #              predicates:
+          #                - Path=/**
+          #            - id: order-service
+          #              uri: lb://order-service # lb=load balance, order-service is application name
+          #              predicates:
+          #                - Path=/mptc-order-service/**
+          #              filters:
+          #                - RewritePath=/mptc-order-service/?(?<segment>.*), /$\{segment}
+
           discovery:
             locator:
               enabled: true # enable to work with nacos service discovery
@@ -50,7 +69,7 @@ spring:
           ecommerce-postman:
             provider: keycloak
             client-id: ecommerce-postman
-            #client-secret: secret
+#            client-secret: secret
             scope:
               - openid
               - profile
@@ -68,16 +87,18 @@ management:
     gateway:
       access: read_only
 
-#scalar:
-#  sources:
-#    - title: Order Service
-#      url: /order-service/v3/api-docs
-#    - title: Customer Service
-#      url: /customer-service/v3/api-docs
-#    - title: Business Service
-#      url: /business-service/v3/api-docs
-#    - title: Payment Service
-#      url: /payment-service/v3/api-docs
+scalar:
+  sources:
+    - title: Order Service
+      url: /order-service/v3/api-docs
+    - title: Customer Service
+      url: /customer-service/v3/api-docs
+    - title: Business Service
+      url: /business-service/v3/api-docs
+    - title: Payment Service
+      url: /payment-service/v3/api-docs
+    - title: User Service
+      url: /user-service/v3/api-docs
 
 springdoc:
   swagger-ui:
@@ -90,5 +111,7 @@ springdoc:
         url: /business-service/v3/api-docs
       - name: Payment Service
         url: /payment-service/v3/api-docs
+      - name: User Service
+        url: /user-service/v3/api-docs
 
 

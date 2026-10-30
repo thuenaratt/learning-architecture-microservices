@@ -36,6 +36,7 @@
         <module>customer-service/customer-service-domain/customer-domain-core</module>
         <module>customer-service/customer-service-domain/customer-application-service</module>
         <module>gateway-service</module>
+        <module>user-service</module>
     </modules>
     <scm>
         <connection/>
@@ -139,6 +140,26 @@
             <dependency>
                 <groupId>training</groupId>
                 <artifactId>payment-application-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>user-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>user-entity</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>user-controller</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>user-main</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

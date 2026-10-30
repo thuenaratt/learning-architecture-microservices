@@ -1,0 +1,89 @@
+package co.ecommerce.user.service.Impl;
+
+import co.ecommerce.user.config.KeycloakAdminClientConfig;
+import co.ecommerce.user.exception.KeycloakException;
+import co.ecommerce.user.service.KeycloakUserService;
+import jakarta.ws.rs.core.Response;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class KeycloakUserServiceImpl implements KeycloakUserService {
+    private final Keycloak keycloak;
+    private final static String REALM_NAME = "ecommerce";
+
+    @Override
+    public void createKeycloakUser(UserRepresentation userRepresentation) {
+        try (Response response = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                .users()
+                .create(userRepresentation)) {
+            if (response.getStatus() != HttpStatus.CREATED.value()) {
+                throw new KeycloakException(
+                        HttpStatus.valueOf(response.getStatus()),
+                        "Create user in keycloak failed with status " + response.getStatus()
+                );
+            }
+        }
+    }
+
+    @Override
+    public UserRepresentation getKeycloakUserByUsername(String username) {
+        return keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                .users()
+                .search(username, true)
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new KeycloakException(
+                        HttpStatus.NOT_FOUND,
+                        "User in Keycloak not found"
+                ));
+    }
+
+    @Override
+    public void updateKeycloakUser(String id, UserRepresentation userRepresentation) {
+        try {
+            keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                    .users()
+                    .get(id)
+                    .update(userRepresentation);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public UserRepresentation getKeycloakUserById(String id) {
+        return keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                .users()
+                .get(id)
+                .toRepresentation();
+    }
+
+    @Override
+    public List<UserRepresentation> getKeycloakUsersByRoleName(String roleName) {
+        var roleResource = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                .roles().get(roleName);
+        List<UserRepresentation> users = new ArrayList<>();
+        int pageSize = 100;
+        for (int first = 0; ; first += pageSize) {
+            List<UserRepresentation> page = roleResource.getUserMembers(first, pageSize);
+            users.addAll(page);
+            if (page.size() < pageSize) {
+                return users;
+            }
+        }
+    }
+
+    @Override
+    public void deleteKeycloakUser(String id) {
+        keycloak.realm(KeycloakAdminClientConfig.REALM_NAME).users().get(id).remove();
+    }
+}
