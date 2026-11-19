@@ -11,6 +11,14 @@
     </parent>
 
     <artifactId>user-main</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -49,6 +57,10 @@
         <dependency>
             <groupId>training</groupId>
             <artifactId>user-controller</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
     </dependencies>
 </project>

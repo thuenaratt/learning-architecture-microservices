@@ -1,15 +1,16 @@
 package co.ecommerce.customer.domain.usecase;
 
+import co.ecommerce.customer.domain.dto.CustomerResult;
 import co.ecommerce.customer.domain.dto.UpdateCustomerCommand;
 import co.ecommerce.customer.domain.dto.UpdateCustomerResult;
-import co.ecommerce.customer.domain.exception.CustomerAlreadyExistsException;
-import co.ecommerce.customer.domain.exception.CustomerNotFoundException;
-import co.ecommerce.customer.domain.mapper.CustomerDataMapper;
+import co.ecommerce.customer.domain.mapper.CustomerDomainMapper;
 import co.ecommerce.customer.domain.port.output.CustomerRepository;
+import co.ecommerce.exception.CustomerDomainException;
 import co.ecommerce.order.domain.valueobject.CustomerId;
 import co.ecommerce.order.domain.valueobject.Email;
 import co.ecommerce.entity.Customer;
 import co.ecommerce.event.CustomerUpdatedEvent;
+import co.ecommerce.order.domain.valueobject.PhoneNumber;
 import co.ecommerce.service.CustomerDomainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,30 +27,33 @@ public class UpdateCustomerUseCase {
 
     private final CustomerDomainService customerDomainService;
     private final CustomerRepository customerRepository;
-    private final CustomerDataMapper customerDataMapper;
+    private final CustomerDomainMapper customerDomainMapper;
 
     @Transactional
     public UpdateCustomerResult execute(UpdateCustomerCommand updateCustomerCommand) {
-        log.info("Execute UpdateCustomerUseCase : {}", updateCustomerCommand);
 
         Customer customer = customerRepository.findById(new CustomerId(updateCustomerCommand.customerId()))
-                .orElseThrow(() -> new CustomerNotFoundException(
+                .orElseThrow(() -> new CustomerDomainException(
                         "Customer not found: " + updateCustomerCommand.customerId()));
 
         Email newEmail = new Email(updateCustomerCommand.email());
+
         if (!newEmail.equals(customer.getEmail()) && customerRepository.existsByEmail(newEmail.value())) {
-            throw new CustomerAlreadyExistsException("Email already exists");
+            throw new CustomerDomainException("Email already exists");
         }
 
-        CustomerUpdatedEvent customerUpdatedEvent = customerDomainService.updateCustomer(customer,
+        customer.updateCustomer(
                 updateCustomerCommand.familyName(),
                 updateCustomerCommand.givenName(),
                 newEmail,
-                customerDataMapper.toPhoneNumber(updateCustomerCommand.phoneNumber()));
-        Customer savedCustomer = customerRepository.save(customer);
+                new PhoneNumber(updateCustomerCommand.phoneNumber())
+        );
+
+        CustomerUpdatedEvent customerUpdatedEvent = customerDomainService.updateCustomer(customer);
+        CustomerResult savedCustomer = customerRepository.save(customer);
 
         log.info("Customer updated with id: {} at {}",
-                savedCustomer.getId().value(), customerUpdatedEvent.getUpdatedAt());
-        return new UpdateCustomerResult(savedCustomer.getId().value());
+                savedCustomer.id(), customerUpdatedEvent.getUpdatedAt());
+        return new UpdateCustomerResult(savedCustomer.id());
     }
 }

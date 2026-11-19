@@ -32,9 +32,6 @@
         <module>business-service</module>
         <module>customer-service</module>
         <module>payment-service</module>
-        <module>customer-service/customer-service-domain</module>
-        <module>customer-service/customer-service-domain/customer-domain-core</module>
-        <module>customer-service/customer-service-domain/customer-application-service</module>
         <module>gateway-service</module>
         <module>user-service</module>
     </modules>
@@ -54,6 +51,11 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>common-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>training</groupId>
                 <artifactId>common-domain</artifactId>
@@ -132,7 +134,13 @@
                 <groupId>training</groupId>
                 <artifactId>customer-service-persistence</artifactId>
                 <version>${project.version}</version>
-            </dependency>            <dependency>
+            </dependency>
+            <dependency>
+                <groupId>training</groupId>
+                <artifactId>customer-service-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>training</groupId>
                 <artifactId>payment-domain-core</artifactId>
                 <version>${project.version}</version>
@@ -180,7 +188,8 @@
                 <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>        </dependencies>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
     <dependencies>
         <dependency>
@@ -198,6 +207,7 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
+
     </dependencies>
 
 

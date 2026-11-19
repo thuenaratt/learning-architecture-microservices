@@ -12,9 +12,14 @@
     <artifactId>customer-service</artifactId>
     <packaging>pom</packaging>
 
+
     <modules>
         <module>customer-service-persistence</module>
         <module>customer-service-restapi</module>
         <module>customer-service-main</module>
+        <module>customer-service-client</module>
+        <module>customer-service-domain</module>
+        <module>customer-service-messaging</module>
+
     </modules>
 </project>

@@ -1,8 +1,8 @@
 package co.ecommerce.customer.domain.usecase;
 
 import co.ecommerce.customer.domain.dto.DeactivateCustomerCommand;
-import co.ecommerce.customer.domain.exception.CustomerNotFoundException;
 import co.ecommerce.customer.domain.port.output.CustomerRepository;
+import co.ecommerce.exception.CustomerDomainException;
 import co.ecommerce.order.domain.valueobject.CustomerId;
 import co.ecommerce.entity.Customer;
 import co.ecommerce.event.CustomerDeactivatedEvent;
@@ -29,7 +29,7 @@ public class DeactivateCustomerUseCase {
         log.info("Execute DeactivateCustomerUseCase : {}", deactivateCustomerCommand);
 
         Customer customer = customerRepository.findById(new CustomerId(deactivateCustomerCommand.customerId()))
-                .orElseThrow(() -> new CustomerNotFoundException(
+                .orElseThrow(() -> new CustomerDomainException(
                         "Customer not found: " + deactivateCustomerCommand.customerId()));
 
         CustomerDeactivatedEvent customerDeactivatedEvent = customerDomainService.deactivateCustomer(customer);

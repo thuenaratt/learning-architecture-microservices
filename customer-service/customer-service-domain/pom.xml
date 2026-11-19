@@ -11,6 +11,12 @@
     </parent>
 
     <artifactId>customer-service-domain</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>customer-domain-core</module>
+        <module>customer-application-service</module>
+    </modules>
 
 
 </project>

@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public RestApiErrorResponse<?> handleException(
@@ -36,4 +37,5 @@ public class GlobalExceptionHandler {
                 ))
                 .toList();
     }
+
 }

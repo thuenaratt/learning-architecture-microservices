@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KeycloakUserServiceImpl implements KeycloakUserService {
     private final Keycloak keycloak;
-    private final static String REALM_NAME = "ecommerce";
+//    private final static String REALM_NAME = "ecommerce";
 
     @Override
     public void createKeycloakUser(UserRepresentation userRepresentation) {
@@ -68,23 +70,61 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
     }
 
     @Override
-    public List<UserRepresentation> getKeycloakUsersByRoleName(String roleName) {
-        var roleResource = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
-                .roles().get(roleName);
-        List<UserRepresentation> users = new ArrayList<>();
-        int pageSize = 100;
-        for (int first = 0; ; first += pageSize) {
-            List<UserRepresentation> page = roleResource.getUserMembers(first, pageSize);
-            users.addAll(page);
-            if (page.size() < pageSize) {
-                return users;
-            }
-        }
+    public Slice<UserRepresentation> getKeycloakUsersByRoleName(String roleName, Pageable pageable) {
+        List<UserRepresentation> userRepresentationList = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                .roles()
+                .get(roleName)
+                .getUserMembers((int) pageable.getOffset(), pageable.getPageSize() + 1);
+
+        boolean hasNext = userRepresentationList.size() > pageable.getPageSize();
+        List<UserRepresentation> content = hasNext ? userRepresentationList.subList(0, pageable.getPageSize()) : userRepresentationList;
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
     @Override
-    public void deleteKeycloakUser(String id) {
-        keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
-                .users().get(id).remove();
+    public Slice<UserRepresentation> getKeycloakUsers(Pageable pageable) {
+        List<UserRepresentation> userRepresentationList = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                .users()
+                .list((int) pageable.getOffset(), pageable.getPageSize() + 1);
+
+        boolean hasNext = userRepresentationList.size() > pageable.getPageSize();
+        List<UserRepresentation> content = hasNext ? userRepresentationList.subList(0, pageable.getPageSize()) : userRepresentationList;
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+
+//    @Override
+//    public List<UserRepresentation> getKeycloakUsersByRoleName(String roleName) {
+//        var roleResource = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+//                .roles().get(roleName);
+//        List<UserRepresentation> users = new ArrayList<>();
+//        int pageSize = 100;
+//        for (int first = 0; ; first += pageSize) {
+//            List<UserRepresentation> page = roleResource.getUserMembers(first, pageSize);
+//            users.addAll(page);
+//            if (page.size() < pageSize) {
+//                return users;
+//            }
+//        }
+//    }
+
+//    @Override
+//    public void deleteKeycloakUser(String id) {
+//        keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+//                .users().get(id).remove();
+//    }
+
+    @Override
+    public void deleteKeycloakUserById(String id) {
+        try (Response response = keycloak.realm(KeycloakAdminClientConfig.REALM_NAME)
+                .users()
+                .delete(id)) {
+            if (response.getStatus() != HttpStatus.NO_CONTENT.value()) {
+                throw new KeycloakException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Delete user in keycloak failed with status " + response.getStatus()
+                );
+            }
+        }
     }
 }

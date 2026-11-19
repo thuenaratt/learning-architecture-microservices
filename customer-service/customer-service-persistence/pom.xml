@@ -28,6 +28,10 @@
         </dependency>
         <dependency>
             <groupId>training</groupId>
+            <artifactId>common-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>training</groupId>
             <artifactId>common-domain</artifactId>
         </dependency>
     </dependencies>
