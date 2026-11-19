@@ -1,32 +1,50 @@
 package co.ecommerce.customer.restapi.controller;
 
+import co.ecommerce.core.PageResponse;
 import co.ecommerce.customer.client.dto.UserResponse;
 import co.ecommerce.customer.client.feign.UserFeignClient;
+import co.ecommerce.customer.domain.dto.CustomerResult;
+import co.ecommerce.customer.domain.dto.GetCustomersQuery;
+import co.ecommerce.customer.domain.usecase.GetAllCustomersUseCase;
+import co.ecommerce.customer.domain.usecase.GetCustomerByIdUseCase;
 import co.ecommerce.customer.restapi.dto.CustomerResponse;
+import co.ecommerce.customer.restapi.mapper.CustomerWebMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
-@RequestMapping("api/customers")
+@RequestMapping("/api/customers")
 @RequiredArgsConstructor
 public class CustomerQueryController {
 
     private final UserFeignClient userFeignClient;
+    private final GetAllCustomersUseCase getAllCustomersUseCase;
+    private final GetCustomerByIdUseCase getCustomerByIdUseCase;
+    private final CustomerWebMapper customerWebMapper;
+
+
+    @GetMapping("/{id}")
+    public CustomerResponse getByIdWithCache(@PathVariable UUID id) {
+        CustomerResult result = getCustomerByIdUseCase.execute(id);
+        return customerWebMapper.toCustomerResponse(result);
+    }
+
 
     @GetMapping
-    public CustomerResponse getAll(
+    public PageResponse<CustomerResponse> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "25") int size
-
-    ){
-        return null;
+    ) {
+        PageResponse<CustomerResult> result = getAllCustomersUseCase.execute(new GetCustomersQuery(page, size));
+        return customerWebMapper.toCustomerResponse(result);
     }
+
 
     @GetMapping("/check-user/{userId}")
-    public UserResponse checkUser(@PathVariable String userId){
+    public UserResponse checkUser(@PathVariable String userId) {
         return userFeignClient.getById(userId);
-
     }
-
 
 }
